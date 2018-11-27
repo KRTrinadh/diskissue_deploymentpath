@@ -1,0 +1,27 @@
+#!/bin/bash
+days=20
+#read -p "enter days_count:" days
+if [[ $days -le 7 ]]; then
+  echo "Value is lessthan 7 so script failed"
+else
+    echo "value not lessthan 7"
+    prod=/home/rc/archive/deployments/prod
+    prodeu=/home/rc/archive/deployments/prodeu
+    prodru=/home/rc/archive/deployments/prodru
+    prodcn=/home/rc/archive/deployments/prodcn
+    prodksa=/home/rc/archive/deployments/prodksa
+    produae=/home/rc/archive/deployments/produae
+
+
+IFS=$'\n'
+for dc in $prod $prodeu $prodru $prodcn $prodksa $produae; do
+
+echo "Deleting Oldthan $days files from $dc"
+        IFS=$'\n' files=( $(find $prod/an $dc/buyer $dc/s4  -maxdepth 1 -type d -mtime +"$days") )
+        for dd in "${files[@]}"; do
+    echo "Apply full permissions and delete: $dd"
+         chmod -R 777 $dd;
+         rm -rf $dd;
+        done
+    done
+fi
