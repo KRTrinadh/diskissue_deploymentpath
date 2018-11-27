@@ -1,0 +1,29 @@
+#!/bin/bash
+days=20
+echo -e "NOTE: FIX FOR DISK ISSUE IN DEPLOYEMENT AREA. \v We WILL GET THIS MAIL EVERY WEDNESDAY WITH LIST OF FILES WHICH ARE GOING TO BE DELETED ON THURSDAY"
+if [[ $days -le 7 ]]; then
+  echo "Value is lessthan 7 so script failed"
+else
+    echo "if conditions success ... we are not removing latest 7 days files."
+    prod=/home/rc/archive/deployments/prod
+    prodeu=/home/rc/archive/deployments/prodeu
+    prodru=/home/rc/archive/deployments/prodru
+    prodcn=/home/rc/archive/deployments/prodcn
+    prodksa=/home/rc/archive/deployments/prodksa
+    produae=/home/rc/archive/deployments/produae
+
+
+IFS=$'\n'
+for dc in $prod $prodeu $prodru $prodcn $prodksa $produae;
+    do
+
+echo "Finding Olderthan 20 files and changing permissions from $dc"
+        IFS=$'\n' files=( $(find $prod/an $dc/buyer $dc/s4  -maxdepth 1 -type d -mtime +"$days") )
+        for d in "${files[@]}"; do
+        echo "The following files going to be deleted by tomorrow: $d"
+        ls -ldrt $d;
+        #chmod -R 777 $d;
+       done
+
+    done
+fi
